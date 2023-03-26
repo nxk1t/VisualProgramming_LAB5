@@ -15,7 +15,8 @@
 	<EmbeddedResource Remove="Assets\Misk\**" />
 	<None Remove="Assets\Misk\**" />
     <None Remove=".gitignore" />
-    <None Remove="Assets\TrashCan.png" />
+    <None Remove="Assets\kedi.ico" />
+    <None Remove="Assets\Trash.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +38,9 @@
     </Compile>
     <Compile Update="Views\Shape5_UserControl.axaml.cs">
       <DependentUpon>Shape5_UserControl.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ShapeT_UserControl.axaml.cs">
+      <DependentUpon>ShapeT_UserControl.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\Shape6_UserControl.axaml.cs">
       <DependentUpon>Shape6_UserControl.axaml</DependentUpon>

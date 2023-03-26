@@ -18,7 +18,7 @@ namespace Figurator.Models
         {
             this.hook = hook; this.inst = inst;
             Set(init);
-            if (!valid) throw new FormatException("Недействующий формат инициализации SafeNum: " + init);
+            if (!valid) throw new FormatException("Неверный формат инициализации SafeNum: " + init);
         }
         public int Num => num;
 
@@ -48,7 +48,7 @@ namespace Figurator.Models
             try
             {
                 a = int.Parse(str);
-            } 
+            }
             catch { Upd_valid(false); return; }
 
             if (Math.Abs(a) > 10000) { Upd_valid(false); return; }
@@ -67,6 +67,6 @@ namespace Figurator.Models
             }
         }
 
-        public IBrush Color { get => valid ? Brushes.Lime : Brushes.Pink; }
+        public IBrush Color { get => valid ? Brushes.LightBlue : Brushes.Red; }
     }
 }

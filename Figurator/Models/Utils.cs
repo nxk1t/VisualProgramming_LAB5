@@ -1,7 +1,5 @@
-﻿using System.Runtime.Serialization.Json;
-using System.Text;
+﻿using System.Text;
 using System.Xml.Linq;
-using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
@@ -10,13 +8,11 @@ using Avalonia;
 using Avalonia.Media;
 using System.Text.Json;
 using Figurator.ViewModels;
-using HarfBuzzSharp;
 
 namespace Figurator.Models
 {
-    public class Utils
+    public static class Utils
     {
-
         public static string Base64Encode(string plainText)
         {
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -31,18 +27,20 @@ namespace Figurator.Models
         public static string JsonEscape(string str)
         {
             StringBuilder sb = new();
-            foreach (char i in str) {
-                sb.Append(i switch {
+            foreach (char i in str)
+            {
+                sb.Append(i switch
+                {
                     '"' => "\\\"",
                     '\\' => "\\\\",
-                    '$' => "{$",
+                    '$' => "{$", 
                      _ => i
                 });
             }
             return sb.ToString();
         }
         public static string Obj2json(object? obj)
-        {
+        { 
             if (obj == null) return "null";
             if (obj is string @str) return '"' + JsonEscape(str) + '"';
             if (obj is bool @bool) return @bool ? "true" : "false";
@@ -156,8 +154,10 @@ namespace Figurator.Models
         public static string XMLEscape(string str)
         {
             StringBuilder sb = new();
-            foreach (char i in str) {
-                sb.Append(i switch {
+            foreach (char i in str)
+            {
+                sb.Append(i switch
+                {
                     '"' => "&quot;",
                     '\'' => "&apos;",
                     '>' => "&gt;",
@@ -182,7 +182,7 @@ namespace Figurator.Models
             StringBuilder items = new();
             foreach (var entry in dict)
                 if (IsComposite(entry.Value))
-                    items.Append("<" + entry.Key + ">" + ToXMLHandler(entry.Value, level + "\t") + "</" + entry.Key + ">");
+                    items.Append(level + "\t<" + entry.Key + ">" + ToXMLHandler(entry.Value, level + "\t\t") + level + "\t</" + entry.Key + ">");
                 else attrs.Append(" " + entry.Key + "=\"" + ToXMLHandler(entry.Value, "{err}") + "\"");
 
             if (items.Length == 0) return level + "<Dict" + attrs.ToString() + "/>";
@@ -206,20 +206,22 @@ namespace Figurator.Models
 
             if (obj is List<object?> @list) return List2XML(@list, level);
             if (obj is Dictionary<string, object?> @dict) return Dict2XML(@dict, level);
-            if (obj is JsonElement @item) {
-                switch (@item.ValueKind) {
-                case JsonValueKind.Undefined: return "undefined";
-                case JsonValueKind.Object:
-                    return Dict2XML(new Dictionary<string, object?>(@item.EnumerateObject().Select(pair => new KeyValuePair<string, object?>(pair.Name, pair.Value))), level);
-                case JsonValueKind.Array: 
-                    return List2XML(@item.EnumerateObject().Select(item => (object?) item.Value).ToList(), level);
-                case JsonValueKind.String:
-                    var s = XMLEscape(@item.GetString() ?? "null");
-                    return s;
-                case JsonValueKind.Number: return "$" + @item.ToString(); 
-                case JsonValueKind.True: return "yeah";
-                case JsonValueKind.False: return "nop";
-                case JsonValueKind.Null: return "null";
+            if (obj is JsonElement @item)
+            {
+                switch (@item.ValueKind)
+                {
+                    case JsonValueKind.Undefined: return "undefined";
+                    case JsonValueKind.Object:
+                        return Dict2XML(new Dictionary<string, object?>(@item.EnumerateObject().Select(pair => new KeyValuePair<string, object?>(pair.Name, pair.Value))), level);
+                    case JsonValueKind.Array:
+                        return List2XML(@item.EnumerateObject().Select(item => (object?) item.Value).ToList(), level);
+                    case JsonValueKind.String:
+                        var s = XMLEscape(@item.GetString() ?? "null");
+                        return s;
+                    case JsonValueKind.Number: return "$" + @item.ToString();
+                    case JsonValueKind.True: return "yeah";
+                    case JsonValueKind.False: return "nop";
+                    case JsonValueKind.Null: return "null";
                 }
             }
             Log.Write("XT: " + obj.GetType());
@@ -270,7 +272,7 @@ namespace Figurator.Models
                     if (sb.Length > 1) sb.Append(", ");
                     sb.Append(ToJSONHandler(el.Name.LocalName));
                     sb.Append(": ");
-                    sb.Append(ToJSONHandler(el));
+                    sb.Append(ToJSONHandler(el.Elements().ToArray()[0]));
                 }
                 sb.Append('}');
             } 
@@ -288,7 +290,8 @@ namespace Figurator.Models
                     sb.Append(ToJSONHandler(el));
                 }
                 sb.Append(']');
-            }
+            } 
+            else sb.Append("Type??" + name);
             return sb.ToString();
         }
         public static string Xml2json(string xml) => ToJSONHandler(XElement.Parse(xml));
@@ -309,6 +312,17 @@ namespace Figurator.Models
             target.Arrange(new Rect(size));
             bitmap.Render(target);
             bitmap.Save(path);
+        }
+
+        public static string TrimAll(this string str)
+        { 
+            StringBuilder sb = new();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (i > 0 && str[i] == ' ' && str[i - 1] == ' ') continue;
+                sb.Append(str[i]);
+            }
+            return sb.ToString().Trim();
         }
     }
 }

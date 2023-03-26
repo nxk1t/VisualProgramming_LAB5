@@ -9,7 +9,7 @@ namespace Figurator.Models.Shapes
     public class Shape5_Ellipse: IShape
     {
         private static readonly PropsN[] props = new[] { PName, PCenterDot, PHorizDiagonal, PVertDiagonal, PColor, PThickness, PFillColor };
-                
+
         public PropsN[] Props => props;
 
         public string Name => "Эллипс";
@@ -70,6 +70,8 @@ namespace Figurator.Models.Shapes
 
             return true;
         }
+
+
 
         public Dictionary<string, object?>? Export(Shape shape)
         {

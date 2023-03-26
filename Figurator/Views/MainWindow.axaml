@@ -7,10 +7,10 @@
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
 		Width="2000" Height="1000"
         x:Class="Figurator.Views.MainWindow"
-        Icon="/Assets/graphic_editor.ico"
+        Icon="/Assets/graphic_editor2_0.ico"
 		WindowState="FullScreen"
 		HasSystemDecorations="True"
-        Title="Figurator">
+        Title="Graphic Editor 2.0">
 
 	<Window.Styles>
 		<Style Selector="Border.b">
@@ -29,7 +29,7 @@
 		</Style>
 		<Style Selector="Grid.gr TextBox">
 			<Setter Property="Margin" Value="8"/>
-			<Setter Property="Background" Value="white"/>
+			<Setter Property="Background" Value="White"/>
 		</Style>
 		<Style Selector="Grid.gr ComboBox">
 			<Setter Property="Margin" Value="8"/>
@@ -61,22 +61,23 @@
 		</Menu>
 		<Grid ColumnDefinitions="2*,5*,*">
 			<Border Classes="b">
-				<Grid RowDefinitions="*,30*,1.24*" ColumnDefinitions="*,*" Classes="grid">
-					<ComboBox Name="comboBoxShape" SelectedIndex="{Binding SelectedShaper}" Width="460" Grid.ColumnSpan="2">			
-						<ComboBoxItem>Прямая линия (нажми для выбора)</ComboBoxItem>
-						<ComboBoxItem>Ломанная линия (нажми для выбора)</ComboBoxItem>
-						<ComboBoxItem>Многоугольник (нажми для выбора)</ComboBoxItem>
-						<ComboBoxItem>Прямоугольник (нажми для выбора)</ComboBoxItem>
-						<ComboBoxItem>Эллипс (нажми для выбора)</ComboBoxItem>
-						<ComboBoxItem>Составная фигура (нажми для выбора)</ComboBoxItem>
+				<Grid RowDefinitions="*,30*,30*,*" ColumnDefinitions="*,*" Classes="grid">
+					<ComboBox Name="comboBoxShape" SelectedIndex="{Binding SelectedShaper}" Width="460" Grid.ColumnSpan="2">
+						<ComboBoxItem>Прямая линия</ComboBoxItem>
+						<ComboBoxItem>Ломанная линия</ComboBoxItem>
+						<ComboBoxItem>Многоугольник</ComboBoxItem>
+						<ComboBoxItem>Прямоугольник</ComboBoxItem>
+						<ComboBoxItem>Эллипс</ComboBoxItem>
+						<ComboBoxItem>Составная фигура</ComboBoxItem>
 					</ComboBox>
 					<ContentControl Grid.Row="1" Grid.ColumnSpan="2" Content="{Binding Content}"/>
-					<Button Name="buttonAdd" Command="{Binding Add}" Grid.Row="2">Добавить</Button>
-					<Button Name="buttonClear" Command="{Binding Clear}" Grid.Row="2" Grid.Column="1">Сброс</Button>
+					<ContentControl Grid.Row="2" Grid.ColumnSpan="2" Content="{Binding SharedContent}"/>
+					<Button Name="buttonAdd" Command="{Binding Add}" Grid.Row="3" VerticalAlignment="Bottom">Добавить</Button>
+					<Button Name="buttonClear" Command="{Binding Clear}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Bottom">Сброс</Button>
 				</Grid>
 			</Border>
 			<Border Grid.Column="1" Classes="b">
-				<Panel Background="AliceBlue">
+				<Panel Background="White">
 					<TextBlock Text="{Binding Logg}" IsVisible="{Binding ServiceVisible}"/>
 					<Canvas Name="canvas" Cursor="Hand" Tapped="CanvasTap"/>
 				</Panel>

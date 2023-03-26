@@ -34,6 +34,8 @@ namespace Figurator.Models
 
         public SafeGeometry shapeCommands;
 
+        public Transformation tformer;
+
         private readonly Action<object?>? UPD;
         private readonly object? INST;
 
@@ -54,6 +56,8 @@ namespace Figurator.Models
             shapeDots = new("50,50 100,100 50,100 100,50", Update, this);
 
             shapeCommands = new("M 10 70 l 30,30 10,10 35,0 0,-35 m 50 0 l 0,-50 10,0 35,35 m 50 0 l 0,-50 10,0 35,35z m 70 0 l 0,30 30,0 5,-35z", Update, this);
+
+            tformer = new(upd, inst);
             UPD = upd;
             INST = inst;
         }
@@ -71,7 +75,7 @@ namespace Figurator.Models
 
         private IShape cur_shaper = Shapers[0];
         private readonly Dictionary<string, Shape> shape_dict = new();
-        public string? newName = null;
+        public string? newName = null; 
         public short select_shaper = -1; 
         private bool update_name_lock = false;
 
@@ -84,8 +88,7 @@ namespace Figurator.Models
 
         internal object GetProp(PropsN num)
         {
-            return num switch
-            {
+            return num switch {
                 PName => shapeName,
                 PColor => shapeColor,
                 PFillColor => shapeFillColor,
@@ -132,10 +135,22 @@ namespace Figurator.Models
                 n += 1;
             }
         }
+        private void AddShape(Shape newy, string? name = null)
+        {
+            name ??= shapeName;
+
+            shape_dict[name] = newy;
+            var item = new ShapeListBoxItem(name, this);
+            shapes.Add(item);
+            name2shape[name] = item;
+        }
+
         public Shape? Create(bool preview)
         {
             Shape? newy = cur_shaper.Build(this);
             if (newy == null) return null;
+            tformer.Transform(newy, preview);
+
             if (preview)
             {
                 newy.Name = "marker";
@@ -144,10 +159,7 @@ namespace Figurator.Models
 
             if (name2shape.TryGetValue(shapeName, out var value)) Remove(value);
 
-            shape_dict[shapeName] = newy;
-            var item = new ShapeListBoxItem(shapeName, this);
-            shapes.Add(item);
-            name2shape[shapeName] = item;
+            AddShape(newy);
 
             newName = GenName(cur_shaper.Name);
             return newy;
@@ -199,6 +211,10 @@ namespace Figurator.Models
                     if (res != null)
                     {
                         res["type"] = shaper.Name;
+
+                        var tform = Transformation.Export(shape);
+                        if (tform.Count > 0) res["transform"] = tform;
+
                         data.Add(res);
                         R = false;
                         break;
@@ -233,21 +249,22 @@ namespace Figurator.Models
             List<Shape> res = new();
             Clear();
 
-            foreach (object? item in @list) {
-                if (item is not Dictionary<string, object?> @dict) { Log.Write("Одна из фигур при импорте - не словарь"); continue; }               
+            foreach (object? item in @list)
+            {
+                if (item is not Dictionary<string, object?> @dict) { Log.Write("Одна из фигур при импорте - не словарь"); continue; }
 
                 if (!@dict.ContainsKey("type") || @dict["type"] is not string @type) { Log.Write("Нет поля type, либо оно не соответствует типу строка"); continue; }
-                if (!@dict.ContainsKey("name") || @dict["name"] is not string @shapeName) { Log.Write("Нет поля name, либо оно не соответствует типу строка"); continue; }
+                if (!@dict.ContainsKey("name") || @dict["name"] is not string @shapeName) { Log.Write("Нет поля name, либо оно не соответствует типу строк"); continue; }
                 if (!TShapers.ContainsKey(@type)) { Log.Write("Фигуратор " + @type + " не обнаружен"); continue; }
 
                 var shaper = TShapers[@type];
                 var newy = shaper.Import(@dict);
                 if (newy == null) { Log.Write("Не получилось собрать фигуру " + Utils.Obj2json(@dict)); continue; }
 
-                shape_dict[shapeName] = newy;
-                var itemm = new ShapeListBoxItem(shapeName, this);
-                shapes.Add(itemm);
-                name2shape[shapeName] = itemm;
+                if (@dict.TryGetValue("transform", out object? tform))
+                    if (tform is not Dictionary<string, object?> @dict2) Log.Write("У одной из фигур при импорте Transform - не словарь");
+                    else Transformation.Import(newy, @dict2);
+                AddShape(newy, shapeName);
 
                 res.Add(newy);
             }
@@ -268,6 +285,7 @@ namespace Figurator.Models
                 yeah = shaper.Load(this, shape);
                 if (yeah)
                 {
+                    tformer.Disassemble(shape);
                     update_name_lock = true;
                     select_shaper = n;
                     Update();
@@ -279,22 +297,26 @@ namespace Figurator.Models
             if (!yeah) Log.Write("Не удалось распаковать фигуру");
         }
 
-        public ShapeListBoxItem? ShapeTap(string name) {
+        public ShapeListBoxItem? ShapeTap(string name)
+        {
             if (name.StartsWith("sn_")) name = name[3..];
             else if (name.StartsWith("sn|")) name = Utils.Base64Decode(name.Split('|')[1]);
             else return null;
 
-            if (name2shape.TryGetValue(name, out var item)) {
+            if (name2shape.TryGetValue(name, out var item))
+            {
                 Select(item);
                 return item;
             }
             return null;
         }
 
-        private void Update() {
+        private void Update()
+        {
             UPD?.Invoke(INST);
         }
-        private static void Update(object? me) {
+        private static void Update(object? me)
+        {
             if (me != null && me is Mapper @map) @map.Update();
         }
     }

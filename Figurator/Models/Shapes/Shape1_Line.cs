@@ -57,6 +57,8 @@ namespace Figurator.Models.Shapes
             return true;
         }
 
+
+
         public Dictionary<string, object?>? Export(Shape shape)
         {
             if (shape is not Line @line) return null;

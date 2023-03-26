@@ -15,7 +15,7 @@ namespace Figurator.Models
         {
             this.hook = hook; this.inst = inst;
             Set(init);
-            if (!valid) throw new FormatException("Недействующий формат инициализации SafePoints: " + init);
+            if (!valid) throw new FormatException("Неверный формат инициализации SafePoints: " + init);
         }
         public Points Points => points;
 
@@ -26,7 +26,8 @@ namespace Figurator.Models
         }
         private void Re_check()
         {
-            if (!valid) {
+            if (!valid)
+            {
                 valid = true;
             }
         }
@@ -34,8 +35,7 @@ namespace Figurator.Models
         {
             points = ps;
             valid = true;
-        } 
-
+        }
         public bool Valid => valid;
 
         public void Set(string str)
@@ -53,7 +53,7 @@ namespace Figurator.Models
                 {
                     a = int.Parse(ss[0]);
                     b = int.Parse(ss[1]);
-                } 
+                }
                 catch { Upd_valid(false); return; }
 
                 if (Math.Abs(a) > 10000 || Math.Abs(b) > 10000) { Upd_valid(false); return; }
@@ -73,6 +73,6 @@ namespace Figurator.Models
             }
         }
 
-        public IBrush Color { get => valid ? Brushes.Lime : Brushes.Pink; }
+        public IBrush Color { get => valid ? Brushes.LightBlue : Brushes.Red; }
     }
 }

@@ -5,24 +5,24 @@ using System.Text;
 
 namespace Figurator.Models
 {
-    public class SafePoint: ForcePropertyChange, ISafe
+    public class SafeDPoint: ForcePropertyChange, ISafe
     {
-        private int X, Y;
+        private double X, Y;
         private bool valid = true;
         private readonly Action<object?>? hook;
         private readonly object? inst;
         private readonly string separator;
-        public SafePoint(int x, int y, Action<object?>? hook = null, object? inst = null, bool altSeparator = false)
+        public SafeDPoint(double x, double y, Action<object?>? hook = null, object? inst = null, bool altSeparator = false)
         {
             X = x; Y = y; this.hook = hook; this.inst = inst;
             separator = altSeparator ? " " : ",";
         }
-        public SafePoint(string init, Action<object?>? hook = null, object? inst = null, bool altSeparator = false)
+        public SafeDPoint(string init, Action<object?>? hook = null, object? inst = null, bool altSeparator = false)
         {
             this.hook = hook; this.inst = inst;
             separator = altSeparator ? " " : ",";
             Set(init);
-            if (!valid) throw new FormatException("Неверный формат инициализации SafePoint: " + init);
+            if (!valid) throw new FormatException("Неверный формат инициализации SafeDPoint: " + init);
         }
         public Point Point { get => new(X, Y); }
 
@@ -40,11 +40,10 @@ namespace Figurator.Models
         }
         public void Set(Point p)
         {
-            X = (int) p.X;
-            Y = (int) p.Y;
+            X = p.X; Y = p.Y;
             valid = true;
         }
-        public void Set(int x, int y)
+        public void Set(double x, double y)
         {
             X = x; Y = y;
             valid = true;
@@ -54,15 +53,15 @@ namespace Figurator.Models
 
         public void Set(string str)
         {
-            var ss = str.TrimAll().Split(separator);
+            var ss = str.TrimAll().Replace('.', ',').Split(separator);
             if (ss == null || ss.Length != 2) { Upd_valid(false); return; }
 
-            int a, b;
+            double a, b;
             try
             {
-                a = int.Parse(ss[0]);
-                b = int.Parse(ss[1]);
-            }
+                a = double.Parse(ss[0]);
+                b = double.Parse(ss[1]);
+            } 
             catch { Upd_valid(false); return; }
 
             if (Math.Abs(a) > 10000 || Math.Abs(b) > 10000) { Upd_valid(false); return; }
@@ -70,7 +69,6 @@ namespace Figurator.Models
             X = a; Y = b;
             Upd_valid(true);
         }
-
         public string Value
         {
             get { Re_check(); return X + separator + Y; }

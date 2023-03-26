@@ -6,7 +6,7 @@ namespace Figurator.Models
     public class SafeGeometry: ForcePropertyChange, ISafe
     {
         private Geometry geom = Geometry.Parse("");
-        private string geom_str = "";
+        private string geom_str = ""; 
         private bool valid = true;
         private readonly Action<object?>? hook;
         private readonly object? inst;
@@ -14,7 +14,7 @@ namespace Figurator.Models
         {
             this.hook = hook; this.inst = inst;
             Set(init);
-            if (!valid) throw new FormatException("Недействующий формат инициализации SafeGeometry: " + init);
+            if (!valid) throw new FormatException("Неверный формат инициализации SafeGeometry: " + init);
         }
         public Geometry Geometry => geom;
 
@@ -39,7 +39,7 @@ namespace Figurator.Models
             try
             {
                 data = Geometry.Parse(str);
-            } 
+            }
             catch { Upd_valid(false); return; }
 
             geom = data;
@@ -48,7 +48,7 @@ namespace Figurator.Models
         }
 
         public string Value
-        { 
+        {
             get { Re_check(); return geom_str; }
             set
             {
@@ -57,6 +57,6 @@ namespace Figurator.Models
             }
         }
 
-        public IBrush Color { get => valid ? Brushes.Lime : Brushes.Pink; }
+        public IBrush Color { get => valid ? Brushes.LightBlue : Brushes.Red; }
     }
 }

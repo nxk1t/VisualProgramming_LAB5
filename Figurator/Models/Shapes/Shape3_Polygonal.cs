@@ -9,7 +9,6 @@ namespace Figurator.Models.Shapes
     public class Shape3_Polygonal: IShape
     {
         private static readonly PropsN[] props = new[] { PName, PDots, PColor, PThickness, PFillColor };
-
         public PropsN[] Props => props;
 
         public string Name => "Многоугольник";
@@ -53,6 +52,8 @@ namespace Figurator.Models.Shapes
 
             return true;
         }
+
+
 
         public Dictionary<string, object?>? Export(Shape shape)
         {

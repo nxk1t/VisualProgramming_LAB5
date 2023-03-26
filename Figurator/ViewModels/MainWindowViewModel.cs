@@ -21,7 +21,6 @@ namespace Figurator.ViewModels
 
     public class MainWindowViewModel: ViewModelBase
     {
-        private UserControl content;
         private int shaper_n = 0;
         private readonly Mapper map;
         private readonly Canvas canv;
@@ -35,12 +34,14 @@ namespace Figurator.ViewModels
             new Shape5_UserControl(),
             new Shape6_UserControl()
         };
+        private UserControl content;
+        private UserControl? sharedContent = new ShapeT_UserControl();
 
         private string log = "";
         public string Logg { get => log; set => this.RaiseAndSetIfChanged(ref log, value + "\n"); }
 
         private bool is_enabled = true;
-        private IBrush add_color = Brushes.White;
+        private IBrush add_color = Brushes.Gray;
         public IBrush AddColor { get => add_color; set => this.RaiseAndSetIfChanged(ref add_color, value); }
 
         private Shape? animated_part = null;
@@ -51,8 +52,8 @@ namespace Figurator.ViewModels
 
             is_enabled = valid;
 
-            AddColor = valid ? valid2 ? Brushes.Lime : Brushes.Yellow : Brushes.Pink;
-            ShapeNameColor = valid2 ? Brushes.Lime : Brushes.Yellow;
+            AddColor = valid ? valid2 ? Brushes.LightBlue : Brushes.Yellow : Brushes.Pink;
+            ShapeNameColor = valid2 ? Brushes.LightBlue : Brushes.Yellow;
 
             if (map.newName != null)
             {
@@ -84,6 +85,8 @@ namespace Figurator.ViewModels
                 map.select_shaper = -1;
                 if (select == shaper_n) SelectedShaper = select == 0 ? 1 : 0;
                 SelectedShaper = select;
+                SharedContent = null; 
+                SharedContent = new ShapeT_UserControl();
             }
         }
         private static void Update(object? inst)
@@ -115,6 +118,11 @@ namespace Figurator.ViewModels
         {
             get => content;
             set => this.RaiseAndSetIfChanged(ref content, value);
+        }
+        public UserControl? SharedContent
+        {
+            get => sharedContent;
+            set => this.RaiseAndSetIfChanged(ref sharedContent, value);
         }
 
         private void FuncAdd()
@@ -149,7 +157,8 @@ namespace Figurator.ViewModels
             } 
             else map.Export(Type == "XML");
         }
-        private void FuncImport(string Type) {
+        private void FuncImport(string Type)
+        {
             Shape[]? beginners = map.Import(Type == "XML");
             if (beginners == null) return;
 
@@ -187,16 +196,20 @@ namespace Figurator.ViewModels
         public SafePoints ShapeDots => map.shapeDots;
 
         public SafeGeometry ShapeCommands => map.shapeCommands;
-        
+
+        public SafeNum RenderTransformAngle => map.tformer.rotateTransformAngle;
+        public SafePoint RenderTransformCenter => map.tformer.rotateTransformCenter;
+        public SafeDPoint ScaleTransform => map.tformer.scaleTransform;
+        public SafePoint SkewTransform => map.tformer.skewTransform;
+
         private readonly static string[] colors = new[]
         {
             "Yellow", "Blue", "Green", "Red",
             "Orange", "Brown", "Pink", "Aqua",
-            "Lime",
             "White", "LightGray", "DarkGray", "Black"
         };
         public static string[] ColorsArr { get => colors; }
-
+    
         public ObservableCollection<ShapeListBoxItem> Shapes { get => map.shapes; }
 
         private bool service_visible = true;
