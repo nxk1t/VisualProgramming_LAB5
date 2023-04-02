@@ -268,21 +268,5 @@ namespace GraphicEditor2.Models
             }
             for (var i = data; i < data + size * 3; i++) *i = buf[*i];
         }
-
-        //public static void Import()
-        //{
-        //    string name = "Export.png";
-
-        //    if (!File.Exists("../../../" + name)) { return; }
-        //    var bmp = new Bitmap("../../../" + name);
-        //    var w = bmp.Width;
-        //    var h = bmp.Height;
-        //    BitmapData bd = bmp.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
-
-        //    Contrast(bd, 256 * 2);
-
-        //    bmp.UnlockBits(bd);
-        //    bmp.Save("../../../Res.png", ImageFormat.Png);
-        //}
     }
 }
