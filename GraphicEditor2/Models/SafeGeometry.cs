@@ -1,12 +1,13 @@
 ﻿using Avalonia.Media;
+using GraphicEditor2.Models.Shapes;
+using GraphicEditor2.Models;
 using System;
 
 namespace GraphicEditor2.Models
 {
-    public class SafeGeometry: ForcePropertyChange, ISafe
+    public class SafeGeometry : ForcePropertyChange, ISafe
     {
-        private Geometry geom = Geometry.Parse("");
-        private string geom_str = ""; 
+        private Geometry objGeometry = new GeometryParsing();
         private bool valid = true;
         private readonly Action<object?>? hook;
         private readonly object? inst;
@@ -16,7 +17,7 @@ namespace GraphicEditor2.Models
             Set(init);
             if (!valid) throw new FormatException("Неверный формат инициализации SafeGeometry: " + init);
         }
-        public Geometry Geometry => geom;
+        public Geometry Geometry => objGeometry;
 
         private void Upd_valid(bool v)
         {
@@ -30,7 +31,6 @@ namespace GraphicEditor2.Models
                 valid = true;
             }
         }
-
         public bool Valid => valid;
 
         public void Set(string str)
@@ -38,18 +38,17 @@ namespace GraphicEditor2.Models
             Geometry data;
             try
             {
-                data = Geometry.Parse(str);
+                data = Geometry.MyParse(str);
             }
             catch { Upd_valid(false); return; }
 
-            geom = data;
-            geom_str = str;
+            objGeometry = data;
             Upd_valid(true);
         }
 
         public string Value
         {
-            get { Re_check(); return geom_str; }
+            get { Re_check(); return objGeometry.Stringify(); }
             set
             {
                 Set(value);
@@ -57,6 +56,6 @@ namespace GraphicEditor2.Models
             }
         }
 
-        public IBrush Color { get => valid ? Brushes.LightBlue : Brushes.Red; }
+        public IBrush Color { get => valid ? Brushes.Lime : Brushes.Pink; }
     }
 }

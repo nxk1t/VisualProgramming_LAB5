@@ -77,9 +77,14 @@
 				</Grid>
 			</Border>
 			<Border Grid.Column="1" Classes="b">
-				<Panel Background="White">
+				<Panel Background="White" DragDrop.AllowDrop="True">
 					<TextBlock Text="{Binding Logg}" IsVisible="{Binding ServiceVisible}"/>
-					<Canvas Name="canvas" Cursor="Hand" Tapped="CanvasTap"/>
+					<Canvas Name="canvas" Cursor="Hand"/>
+					<Grid Background="#aeee" RowDefinitions="*,50*,*" ColumnDefinitions="*,50*,*" IsVisible="{Binding DropboxVisible}">
+						<Border Grid.Row="1" Grid.Column="1" BorderThickness="2" BorderBrush="blue">
+							<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="48">Перетащите файл сюда</TextBlock>
+						</Border>
+					</Grid>
 				</Panel>
 			</Border>
 			<Border Grid.Column="2" Classes="b">

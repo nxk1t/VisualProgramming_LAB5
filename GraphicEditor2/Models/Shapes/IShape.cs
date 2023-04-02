@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls.Shapes;
 using System;
 using System.Collections.Generic;
+using Avalonia;
 
 namespace GraphicEditor2.Models.Shapes
 {
@@ -21,5 +22,8 @@ namespace GraphicEditor2.Models.Shapes
 
         public Dictionary<string, object?>? Export(Shape shape);
         public Shape? Import(Dictionary<string, object?> data);
+
+        public Point? GetPos(Shape shape);
+        public bool SetPos(Shape shape, int x, int y);
     }
 }

@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <List>
-	<Dict name="Линия 1" start="$p$50,50" end="$p$100,100" stroke="$C$Blue" thickness="$2" type="Линия"/>
-	<Dict name="Ломанная 1" points="$P$100,100|500,500|500,200|200,700" stroke="$C$Brown" thickness="$2" type="Ломанная">
+	<Dict name="Линия 1" start="$p$292,152" end="$p$147,452" stroke="$C$Black" thickness="$4" type="Линия">
 		<transform>
-			<Dict rotate="50 0 0" scale="1 5"/>
+			<Dict rotate="-5 10 -1000" scale="1 0,5" skew="1 10"/>
 		</transform>
 	</Dict>
-	<Dict name="Многоугольник 1" points="$P$100,100|500,500|500,200|200,700" stroke="$C$Brown" fill="$C$Green" thickness="$2" type="Многоугольник">
+	<Dict name="Ломанная 1" points="$P$294,263|344,313|294,313|344,263" stroke="$C$Black" thickness="$4" type="Ломанная">
 		<transform>
-			<Dict rotate="50 0 0" scale="1 0,25"/>
+			<Dict rotate="-5 10 -1000" scale="1 0,5" skew="1 10"/>
 		</transform>
 	</Dict>
-	<Dict name="Прямоугольник 1" margin="$T$670,110,0,0" width="$200" height="$100" stroke="$C$Aqua" fill="$C$Blue" thickness="$2" type="Прямоугольник">
+	<Dict name="Многоугольник 1" points="$P$477,256|527,306|477,306|527,256" stroke="$C$Black" fill="$C$Pink" thickness="$4" type="Многоугольник">
 		<transform>
-			<Dict rotate="50 0 0" scale="1 0,25"/>
+			<Dict rotate="-5 10 -1000" scale="1 0,5" skew="1 10"/>
 		</transform>
 	</Dict>
-	<Dict name="Эллипс 1" margin="$T$50,100,0,0" width="$200" height="$100" stroke="$C$Yellow" fill="$C$Red" thickness="$2" type="Эллипс">
+	<Dict name="Эллипс 1" margin="$T$328,131,328,131" width="$200" height="$100" stroke="$C$Black" fill="$C$Pink" thickness="$4" type="Эллипс">
 		<transform>
-			<Dict rotate="50 0 0" scale="1 0,5"/>
+			<Dict rotate="-5 10 -1000" scale="1 0,5" skew="1 10"/>
 		</transform>
 	</Dict>
-	<Dict name="Составная фигура 1" path="M 40 140 l 30,30 10,10 35,0 0,-35 m 50 0 l 0,-50 10,0 35,35 m 50 0 l 0,-50 10,0 35,35z m 70 0 l 0,30 30,0 5,-35z" stroke="$C$Yellow" fill="$C$Red" thickness="$2" type="Составная фигура">
+	<Dict name="Линия 2" start="$p$593,450" end="$p$589,200" stroke="$C$Black" thickness="$4" type="Линия">
 		<transform>
-			<Dict rotate="50 0 0" scale="1 0,5"/>
+			<Dict rotate="-5 10 -1000" scale="1 0,5" skew="1 10"/>
+		</transform>
+	</Dict>
+	<Dict name="Линия 3" start="$p$149,492" end="$p$599,492" stroke="$C$Black" thickness="$4" type="Линия">
+		<transform>
+			<Dict rotate="-5 10 -1000" scale="1 0,5" skew="1 10"/>
+		</transform>
+	</Dict>
+	<Dict name="Составная фигура 1" path="M 398 417 l 30,30 10,10 35,0 0,-35 m 50 0 l 0,-50 10,0 35,35 m 50 0 l 0,-50 10,0 35,35z m 70 0 l 0,30 30,0 5,-35z" stroke="$C$Black" fill="$C$Pink" thickness="$2" type="Составная фигура">
+		<transform>
+			<Dict rotate="20 0 0" scale="1 0,5"/>
 		</transform>
 	</Dict>
 </List>

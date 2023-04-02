@@ -1,8 +1,10 @@
 ﻿using Avalonia;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
+using System;
 using System.Collections.Generic;
 using static GraphicEditor2.Models.Shapes.PropsN;
+using GraphicEditor2.ViewModels;
 
 namespace GraphicEditor2.Models.Shapes
 {
@@ -40,13 +42,11 @@ namespace GraphicEditor2.Models.Shapes
         public bool Load(Mapper map, Shape shape)
         {
             if (shape is not Line @line) return false;
-            if (@line.Name == null || !@line.Name.StartsWith("sn_")) return false;
+            //if (@line.Name == null || !@line.Name.StartsWith("sn_")) return false;
             if (@line.Stroke == null) return false;
 
             if (map.GetProp(PStartDot) is not SafePoint @start) return false;
             if (map.GetProp(PEndDot) is not SafePoint @end) return false;
-
-            map.SetProp(PName, @line.Name[3..]);
 
             @start.Set(@line.StartPoint);
             @end.Set(@line.EndPoint);
@@ -56,8 +56,6 @@ namespace GraphicEditor2.Models.Shapes
 
             return true;
         }
-
-
 
         public Dictionary<string, object?>? Export(Shape shape)
         {
@@ -73,6 +71,7 @@ namespace GraphicEditor2.Models.Shapes
                 ["thickness"] = (int) @line.StrokeThickness
             };
         }
+
         public Shape? Import(Dictionary<string, object?> data)
         {
             if (!data.ContainsKey("name") || data["name"] is not string @name) return null;
@@ -91,6 +90,24 @@ namespace GraphicEditor2.Models.Shapes
                 Stroke = @color,
                 StrokeThickness = @thickness
             };
+        }
+
+        public Point? GetPos(Shape shape)
+        {
+            if (shape is not Line @line) return null;
+            return (line.StartPoint + line.EndPoint) / 2;
+        }
+        public bool SetPos(Shape shape, int x, int y)
+        {
+            var old = GetPos(shape);
+            if (old == null) return false;
+
+            var line = (Line)shape;
+            Point delta = new Point(x, y) - (Point)old;
+            line.StartPoint += delta;
+            line.EndPoint += delta;
+
+            return true;
         }
     }
 }

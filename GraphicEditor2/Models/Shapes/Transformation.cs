@@ -3,6 +3,7 @@ using Avalonia.Media;
 using GraphicEditor2.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Collections.ObjectModel;
 
 namespace GraphicEditor2.Models.Shapes
@@ -50,7 +51,6 @@ namespace GraphicEditor2.Models.Shapes
                 var p = skewTransform.Point;
                 group.Children.Add(new SkewTransform(p.X, p.Y));
             }
-
             shape.RenderTransform = group;
         }
         public void Disassemble(Shape shape)
@@ -64,16 +64,16 @@ namespace GraphicEditor2.Models.Shapes
 
             foreach (var el in @group.Children)
                 switch (el)
-                { 
+                {
                     case RotateTransform @rotate:
-                        rotateTransformAngle.Set((int) @rotate.Angle);
-                        rotateTransformCenter.Set((int) @rotate.CenterX, (int) @rotate.CenterY);
+                        rotateTransformAngle.Set((int)@rotate.Angle);
+                        rotateTransformCenter.Set((int)@rotate.CenterX, (int)@rotate.CenterY);
                         break;
                     case ScaleTransform @scale:
                         scaleTransform.Set(@scale.ScaleX, @scale.ScaleY);
                         break;
                     case SkewTransform @skew:
-                        skewTransform.Set((int) @skew.AngleX, (int) @skew.AngleY);
+                        skewTransform.Set((int)@skew.AngleX, (int)@skew.AngleY);
                         break;
                 }
         }
@@ -85,17 +85,17 @@ namespace GraphicEditor2.Models.Shapes
 
             foreach (var el in @group.Children)
                 switch (el)
-                { 
+                {
                     case RotateTransform @rotate:
                         if (@rotate.Angle != 0)
-                            dict["rotate"] = (int) @rotate.Angle + " " + (int) @rotate.CenterX + " " + (int) @rotate.CenterY;
+                            dict["rotate"] = (int)@rotate.Angle + " " + (int)@rotate.CenterX + " " + (int)@rotate.CenterY;
                         break;
                     case ScaleTransform @scale:
                         var str = @scale.ScaleX.ToString("0.#####") + " " + @scale.ScaleY.ToString("0.#####");
                         if (str != "1 1") dict["scale"] = str;
                         break;
                     case SkewTransform @skew:
-                        var str2 = (int) @skew.AngleX + " " + (int) @skew.AngleY;
+                        var str2 = (int)@skew.AngleX + " " + (int)@skew.AngleY;
                         if (str2 != "0 0") dict["skew"] = str2;
                         break;
                 }
@@ -107,34 +107,52 @@ namespace GraphicEditor2.Models.Shapes
             var group = new TransformGroup();
 
             foreach (var entry in dict)
-                switch(entry.Key)
+                switch (entry.Key)
                 {
                     case "rotate":
-                        if (entry.Value is not string @rotate) { Log.Write("Неверный тип значения rotate ключа"); break; }
-                        try {
+                        if (entry.Value is not string @rotate) { Log.Write("Не верный тип значения rotate ключа"); break; }
+                        try
+                        {
                             var trio = new SafeTrio(@rotate, null, null, true);
                             group.Children.Add(new RotateTransform(trio.X, trio.Y, trio.Z));
-                        } catch (FormatException fe) { Log.Write("rotate format error:\n" + fe); break; }
+                        }
+                        catch (FormatException fe) { Log.Write("rotate format error:\n" + fe); break; }
                         break;
 
                     case "scale":
-                        if (entry.Value is not string @scale) { Log.Write("Неверный тип значения scale ключа"); break; }
-                        try {
+                        if (entry.Value is not string @scale) { Log.Write("Не верный тип значения scale ключа"); break; }
+                        try
+                        {
                             var p = new SafeDPoint(@scale, null, null, true).Point;
                             group.Children.Add(new ScaleTransform(p.X, p.Y));
-                        } catch (FormatException fe) { Log.Write("scale format error:\n" + fe); break; }
+                        }
+                        catch (FormatException fe) { Log.Write("scale format error:\n" + fe); break; }
                         break;
 
                     case "skew":
-                        if (entry.Value is not string @skew) { Log.Write("Неверный тип значения skew ключа"); break; }
-                        try {
+                        if (entry.Value is not string @skew) { Log.Write("Не верный тип значения skew ключа"); break; }
+                        try
+                        {
                             var p = new SafePoint(@skew, null, null, true).Point;
                             group.Children.Add(new SkewTransform(p.X, p.Y));
-                        } catch (FormatException fe) { Log.Write("skew format error:\n" + fe); break; }
+                        }
+                        catch (FormatException fe) { Log.Write("skew format error:\n" + fe); break; }
                         break;
                 }
 
             shape.RenderTransform = group;
+        }
+
+
+
+        public static ScaleTransform GetScale(Shape shape)
+        {
+            if (shape.RenderTransform is not TransformGroup @group) shape.RenderTransform = @group = new TransformGroup();
+            foreach (var el in @group.Children)
+                if (el is ScaleTransform @res) return @res;
+            var res2 = new ScaleTransform(1, 1);
+            group.Children.Add(res2);
+            return res2;
         }
     }
 }
